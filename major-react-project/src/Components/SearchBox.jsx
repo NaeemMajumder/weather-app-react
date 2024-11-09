@@ -2,9 +2,11 @@
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
+import InfoBox from './InfoBox';
 
 export default function SearchBox(){
     let [city, setCity] = useState("");
+    let [weatherInfo, setWeatherInfo] = useState({});
 
     
     // API URL GeoCoding
@@ -17,7 +19,16 @@ export default function SearchBox(){
     let getWeatherInfo_GEOCODING = async()=>{
         let response = await fetch(`${API_URL_GEOCODING}?q=${city}&appid=${API_KEY}&units=metric`);
         let jsonResponse = await response.json();
-        console.log(jsonResponse);
+        let result = {
+            city_name: jsonResponse.name,
+            country_name: jsonResponse.sys.country,
+            temperature: jsonResponse.main.temp,
+            tempMin: jsonResponse.main.temp_min,
+            tempMax: jsonResponse.main.temp_max,
+            feelsLike: jsonResponse.main.feels_like,
+            humidity: jsonResponse.main.humidity,
+        }
+        setWeatherInfo({ ...weatherInfo, ...result });
     }
 
 
@@ -29,7 +40,6 @@ export default function SearchBox(){
 
     let handleSubmit = (event)=>{
         event.preventDefault();
-        console.log(city);
         setCity("");
         getWeatherInfo_GEOCODING();
     }
@@ -43,6 +53,16 @@ export default function SearchBox(){
                     <br /><br />
                     <Button variant="contained" type='submit'>Search</Button>
                 </form>
+
+                <br /><br /><hr /><br />
+
+                <div>
+                    {
+                        Object.keys(weatherInfo).length? <InfoBox weatherInfo={weatherInfo}></InfoBox>: "Search For a Location"
+                    }
+                    {/* <InfoBox></InfoBox> */}
+                    
+                </div>
 
             </div>
         </>
