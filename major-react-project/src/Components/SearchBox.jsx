@@ -60,7 +60,6 @@ export default function SearchBox(){
                     {
                         Object.keys(weatherInfo).length? <InfoBox weatherInfo={weatherInfo}></InfoBox>: "Search For a Location"
                     }
-                    {/* <InfoBox></InfoBox> */}
                     
                 </div>
 
